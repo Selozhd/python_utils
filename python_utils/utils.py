@@ -1,3 +1,4 @@
+import functools
 import inspect
 from collections import ChainMap
 
@@ -63,3 +64,48 @@ def lazy_property(function):
         return getattr(self, attr_name)
 
     return _lazyprop
+
+
+def unpack_optional_pair(data):
+    """Unpacks data tuple.
+    Args:
+        data: A tuple of the form `(x,)`, or `(x, y)`.
+    Returns:
+        The unpacked tuple, with `None`s for `y` if it is not provided.
+    """
+    if isinstance(data, list):
+        data = tuple(data)
+    if not isinstance(data, tuple):
+        return (data, None)
+    elif len(data) == 1:
+        return (data[0], None)
+    elif len(data) == 2:
+        return (data[0], data[1])
+    else:
+        error_msg = ("Data is expected to be in format `x`, `(x,)`, `(x, y)`, "
+                     "found: {}").format(data)
+        raise ValueError(error_msg)
+
+
+def unpack_optional_triple(data):
+    """Unpacks data tuple.
+    Args:
+        data: A tuple of the form `(x,)`, `(x, y)`, or `(x, y, z)`.
+    Returns:
+        The unpacked tuple, with `None`s for `y` and `z` if they are not
+        provided.
+    """
+    if isinstance(data, list):
+        data = tuple(data)
+    if not isinstance(data, tuple):
+        return (data, None, None)
+    elif len(data) == 1:
+        return (data[0], None, None)
+    elif len(data) == 2:
+        return (data[0], data[1], None)
+    elif len(data) == 3:
+        return (data[0], data[1], data[2])
+    else:
+        error_msg = ("Data is expected to be in format `x`, `(x,)`, `(x, y)`, "
+                     "or `(x, y, z)`, found: {}").format(data)
+        raise ValueError(error_msg)
