@@ -1,15 +1,10 @@
 """Utils for an immutable dataclass data structure."""
 
 import copy
-import dataclasses
 from dataclasses import _process_class
-from typing import Any, Callable, TypeVar
-
-_ClsT = TypeVar('_ClsT')
-_LsClsT = List[_ClsT]
 
 
-def dataclass(_cls: _ClsT = None,
+def dataclass(_cls=None,
               *,
               init=True,
               repr=True,
@@ -28,7 +23,7 @@ def dataclass(_cls: _ClsT = None,
     return wrap(_cls)
 
 
-def _add_dict_with_set_get(cls: _ClsT):
+def _add_dict_with_set_get(cls):
     """Add a `data` dictionary to the class, if not already present."""
     if cls.__annotations__.get("data"):
         cls.set = set_
@@ -44,26 +39,26 @@ def get(self, prop, default=None):
     return self.data.get(prop, default)
 
 
-def fetchattr(cls: _ClsT, attr, value):
+def fetch_attr(cls, attr, value):
     """Takes any object returns a copy with the attribute changed to value."""
-    new_token = copy.copy(token)
+    new_token = copy.copy(cls)
     setattr(new_token, attr, value)
     return new_token
 
 
-def change_datacls_attr(datacls: _LsClsT, attr, func):
+def change_datacls_attr(datacls, attr, func):
     """Changes datacls.attr based on function."""
     datacls = [fetch_attr(token, attr, func(token)) for token in datacls]
     return datacls
 
 
-def featurize_datacls(datacls: _LsClsT, featurizer, feature_name):
+def featurize_datacls(datacls, featurizer, feature_name):
     """Calls featurizer on each datacls and writes under feature_name."""
     [token.set(feature_name, featurizer(token.text)) for token in datacls]
     return datacls
 
 
-def datacls_to_x(datacls: _LsClsT, x, default=None):
+def datacls_to_x(datacls, x, default=None):
     """Generalizes the pattern of datacls_to_<x>() functions.
     Args:
         datacls: _LsClsT

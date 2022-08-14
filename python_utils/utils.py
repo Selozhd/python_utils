@@ -19,8 +19,13 @@ def inverse_dic_lookup(dic, item):
 
 
 def join_list_of_dict(ls):
-    """Joins a list of dictionaries in a single dictionary."""
+    """Joins a list of dictionaries into a single dictionary."""
     return dict(ChainMap(*ls))
+
+
+def sort_list_by(iterable, reference):
+    """Sorts an iterable with respect to a reference."""
+    return [x for _, x in sorted(zip(reference, iterable))]
 
 
 def ordered(obj):

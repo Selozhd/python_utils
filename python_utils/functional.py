@@ -1,5 +1,5 @@
 import functools
-from typing import Dict
+from typing import Dict, Callable
 
 
 def apply(*func_and_args, **kwargs):
@@ -19,21 +19,21 @@ def pipeline(list_func, data):
     return functools.reduce(_apply, list_func, data)
 
 
-def keymap(func: callable, d: Dict, factory=dict):
+def keymap(func: Callable, dic: Dict, factory=dict):
     """Applies function to dictionary keys."""
     rv = factory()
     rv.update(zip(map(func, dic.keys()), dic.values()))
     return rv
 
 
-def valmap(func: callable, d: Dict, factory=dict):
+def valmap(func: Callable, dic: Dict, factory=dict):
     """Applies function dictionary values."""
     rv = factory()
-    rv.update(zip(d.keys(), map(func, d.values())))
+    rv.update(zip(dic.keys(), map(func, dic.values())))
     return rv
 
 
-def itemmap(func: callable, dic: Dict, factory=dict):
+def itemmap(func: Callable, dic: Dict, factory=dict):
     """Applies function to dictionary items."""
     rv = factory()
     rv.update(map(func, dic.items()))
